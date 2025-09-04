@@ -1,0 +1,49 @@
+body{
+    background-color: #F0F0F0;
+}
+
+.home {
+  flex: 1;
+  padding: 10px;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2%;
+}
+
+.home-header h1 {
+  font-size: 1.8rem;
+  color: #006d8f;
+  font-weight: bold;
+}
+
+.header-icons {
+  display: flex;
+  gap: 20px;
+  font-size: 1.5rem;
+  color: #444;
+}
+
+.header-icons .icon {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.header-icons .icon:hover {
+  color: #006d8f;
+}
+
+.profile {
+  font-size: 2rem;
+  color: #e85c5c;
+}
+
+.section-title {
+  margin-top: 30px;
+  font-size: 1.4rem;
+  color: #333;
+}
+
