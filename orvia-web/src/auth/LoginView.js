@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import logo from "../assets/LogoFinal.png";
-import "./LoginStyle.css"
+import "../styles/LoginStyle.css"
 
-export default function LoginView(){
+export default function LoginView({ switchToRegister }){
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -46,14 +46,12 @@ export default function LoginView(){
           className="Input"
         />
         <p style={{ fontSize: "14px" , alignSelf: 'end'}}>
-        ¿No tienes cuenta?{" "}
-        <span 
-            style={{ color: "#1F7A8C", cursor: "pointer"}} 
-            onClick={() => navigate("/register")}
-        >
+          ¿No tienes cuenta?{" "}
+          <span onClick={switchToRegister} style={{cursor: "pointer", color: "#1F7A8C"}}>
             Regístrate
-        </span>
+          </span>
         </p>
+
         <div className="ButtonBox">
           <button type="submit" className="LoginButton">Iniciar Sesión</button>
         </div>

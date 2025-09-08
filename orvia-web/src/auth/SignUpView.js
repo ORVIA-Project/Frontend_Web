@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/LogoFinal.png"
-import "./SignUpStyle.css"
+import "../styles/SignUpStyle.css"
 
-export default function RegisterView() {
+export default function RegisterView({ switchToLogin }) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -59,10 +59,7 @@ export default function RegisterView() {
 
         <p style={{ fontSize: "14px" , alignSelf: 'end'}}>
           ¿Ya tienes cuenta?{" "}
-          <span 
-            style={{ color: "#1F7A8C", cursor: "pointer" }} 
-            onClick={() => navigate("/login")}
-          >
+          <span onClick={switchToLogin} style={{cursor: "pointer", color: "#1F7A8C"}}>
             Inicia sesión
           </span>
         </p>
