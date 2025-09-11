@@ -32,7 +32,7 @@ export default function RegisterView({ switchToLogin }) {
 
   try {
     const response = await fetch(
-      "http://orvia-alb-2103208119.us-east-2.elb.amazonaws.com",
+      "http://orvia-alb-2103208119.us-east-2.elb.amazonaws.com/v1/auth/register",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
