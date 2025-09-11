@@ -1,3 +1,4 @@
+::-webkit-scrollbar { display: none; }
 
 .TextBox{
     display:flex;
@@ -28,20 +29,22 @@
     padding-right: 15%;
 }
 
-.InputBox{
+.InputBox2{
     display: flex;
     width: 60%;
     align-items: center;
     justify-content: center;
+    
 }
 
-.Input{
+.Input2{
     margin-top: 5%;
     background-color: #eaeaea;
     border: 0;
     border-radius: 10px;
-    height: 5vh;
+    height: 10vh;
     padding-left: 5%;
+
 }
 
 .ButtonBox{

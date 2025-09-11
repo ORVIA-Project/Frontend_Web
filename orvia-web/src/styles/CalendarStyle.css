@@ -1,0 +1,31 @@
+.calendar-container {
+  width: 100%;
+  max-width: 1000px;   /* límite en pantallas grandes */
+  margin: 0 auto;      /* centrar en horizontal */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.ant-picker-calendar {
+  width: 100% !important;   /* asegura que se ajuste al contenedor */
+  height: auto !important;  /* deja que crezca dinámicamente */
+}
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.events .ant-badge-status {
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.notes-month {
+  font-size: 28px;
+  text-align: center;
+}
+.notes-month section {
+  font-size: 28px;
+}
