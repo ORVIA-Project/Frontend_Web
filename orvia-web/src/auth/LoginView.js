@@ -5,7 +5,7 @@ import "../styles/LoginStyle.css"
 
 export default function LoginView({ switchToRegister }){
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -14,13 +14,13 @@ export default function LoginView({ switchToRegister }){
     setError("");
 
     try {
-      const response = await fetch("http://orvia-alb-2103208119.us-east-2.elb.amazonaws.com/v1/auth/login", { 
+      const response = await fetch("/v1/auth/login", { 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username,
+          email,
           password
         }),
       });
@@ -32,11 +32,11 @@ export default function LoginView({ switchToRegister }){
       const data = await response.json();
       console.log("Respuesta API:", data);
 
-      // Guardar token (si la API devuelve uno)
       if (data.token) {
         localStorage.setItem("token", data.token);
-      }
+        
 
+      }
       navigate("/");
     } catch (err) {
       setError(err.message || "Error en el login");
@@ -64,7 +64,7 @@ export default function LoginView({ switchToRegister }){
           <input 
             type="text" 
             placeholder="Usuario" 
-            value={username}
+            value={email}
             onChange={(e) => setUsername(e.target.value)} 
             required
             className="Input"

@@ -39,5 +39,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://orvia-alb-2103208119.us-east-2.elb.amazonaws.com"
+  
 }

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LoginView from "../auth/LoginView";
 import SignUpView from "../auth/SignUpView";
-import "../styles/CardStyle.css"
 
 export default function AuthCard() {
   const [isLogin, setIsLogin] = useState(true);
