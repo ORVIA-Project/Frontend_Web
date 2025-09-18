@@ -49,7 +49,7 @@ export default function RegisterView({ switchToLogin }) {
       const payload = { ...form };
       delete payload.confirmPassword; 
 
-      const response = await fetch("http://orvia-alb-1990414890.us-east-2.elb.amazonaws.com/v1/auth/register", {
+      const response = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload), 
