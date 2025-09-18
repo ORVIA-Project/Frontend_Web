@@ -24,7 +24,7 @@ export default function LoginView({ switchToRegister }){
     setError("");
 
     try {
-      const response = await fetch("/v1/auth/login", { 
+      const response = await fetch("http://orvia-alb-1990414890.us-east-2.elb.amazonaws.com/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
