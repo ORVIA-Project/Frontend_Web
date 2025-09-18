@@ -66,7 +66,7 @@ export default function RegisterView({ switchToLogin }) {
       }
 
       console.log("✅ Usuario registrado:", data);
-      setSuccess("¡Registro exitoso! Redirigiendo al inicio de sesión...");
+      setSuccess("¡Registro exitoso!");
 
       
       setTimeout(() => {

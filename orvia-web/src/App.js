@@ -3,7 +3,7 @@ import { useState } from "react";
 import HomeView from "./pages/HomeView";
 import CalendarView from "./pages/CalendarView";
 import PatientsView from "./pages/PatientsView";
-import Navbar from "./components/Card";
+import Navbar from "./components/Navbar";
 import AuthCard from "./components/Card";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import SplashScreen from "./components/Splash";
@@ -23,8 +23,6 @@ function AppLayout() {
       <Routes>
         
         <Route path="/login" element={<AuthCard />} />
-
-        
         <Route
           path="/"
           element={

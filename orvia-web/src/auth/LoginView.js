@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { notification } from 'antd';
 import { useState } from "react";
 import logo from "../assets/LogoFinal.png";
 import "../styles/LoginStyle.css"
@@ -8,6 +9,15 @@ export default function LoginView({ switchToRegister }){
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = () => {
+    api.open({
+      message: 'Notification Title',
+      description:
+        'I will never close automatically. This is a purposely very very long description that has many many characters and words.',
+      duration: 0,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,12 +42,16 @@ export default function LoginView({ switchToRegister }){
       const data = await response.json();
       console.log("Respuesta API:", data);
 
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        
+       if (data.access_token) {
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
 
-      }
       navigate("/");
+    
+    } else {
+      throw new Error("El backend no devolvió un token");
+    }
+
     } catch (err) {
       setError(err.message || "Error en el login");
     }

@@ -1,8 +1,18 @@
 import { FaHome, FaCalendarAlt, FaFolderOpen, FaSignOutAlt, FaPlusCircle, FaClipboardList } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavbarStyle.css";
 
 export default function Navbar() {
+  
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh_token");
+    navigate("/login");
+
+  };
+
   return (
     <div className="sidebar">
       <ul className="menu">
@@ -33,7 +43,7 @@ export default function Navbar() {
       </div>
 
       <div className="logout">
-        <button className="logout-btn">
+        <button className="logout-btn" onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Cerrar Sesión
         </button>
       </div>

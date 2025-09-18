@@ -40,6 +40,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://orvia-alb-2103208119.us-east-2.elb.amazonaws.com"
+  "proxy": "http://orvia-alb-1990414890.us-east-2.elb.amazonaws.com"
   
 }
