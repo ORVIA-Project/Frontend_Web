@@ -6,11 +6,12 @@ import PatientsView from "./pages/PatientsView";
 import Navbar from "./components/Navbar";
 import AuthCard from "./components/Card";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import ForgotPasswordView from "./auth/ForgotPassword";
 import SplashScreen from "./components/Splash";
 
 function AppLayout() {
   const location = useLocation();
-  const hideNavbar = ["/login"].includes(location.pathname);
+  const hideNavbar = ["/login", "/forgot-password"].includes(location.pathname);
   const [showSplash, setShowSplash] = useState(true);
 
   if (showSplash) {
@@ -23,6 +24,8 @@ function AppLayout() {
       <Routes>
         
         <Route path="/login" element={<AuthCard />} />
+        <Route path="/forgot-password" element={<ForgotPasswordView />} />
+
         <Route
           path="/"
           element={

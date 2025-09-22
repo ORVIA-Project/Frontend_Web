@@ -1,0 +1,19 @@
+.Input3{
+    margin-top: 5%;
+    background-color: #eaeaea;
+    border: 0;
+    border-radius: 10px;
+    height: 5vh;
+    padding-left: 5%;
+    width: 85%;
+}
+
+.SendEmail{
+    background-color: #0A2472;
+    color: white;
+    width: 50%;
+    height: 5vh;
+    border-radius: 10px;
+    border: 0;
+    margin-left: 20%;
+}

@@ -49,3 +49,9 @@ body{
   color: #333;
 }
 
+.ContentBox{
+  display: flex;
+  justify-content: center;
+  margin-top: 15%;
+}
+
