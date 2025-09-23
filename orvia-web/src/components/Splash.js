@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import logo from "../assets/LogoFinal.png";
+import logo from "../assets/LogoV2.png";
 
 export default function SplashScreen({ onFinish }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onFinish();
-    }, 3000); // ⏱️ 2 segundos de splash (ajústalo a gusto)
+    }, 2000); // ⏱️ 2 segundos de splash (ajústalo a gusto)
 
     return () => clearTimeout(timer);
   }, [onFinish]);

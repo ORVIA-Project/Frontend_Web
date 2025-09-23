@@ -1,10 +1,13 @@
 import { FaHome, FaCalendarAlt, FaFolderOpen, FaSignOutAlt, FaPlusCircle, FaClipboardList } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import AppointmentModal from "./Appointment";
 import "../styles/NavbarStyle.css";
+import { useState } from 'react';
 
 export default function Navbar() {
   
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -34,7 +37,7 @@ export default function Navbar() {
       </ul>
 
       <div className="actions">
-        <button className="action-btn">
+        <button className="action-btn" onClick={() => setOpen(true)}>
           <FaPlusCircle className="icon" /> Agendar Cita
         </button>
         <button className="action-btn">
@@ -47,6 +50,8 @@ export default function Navbar() {
           <FaSignOutAlt className="icon" /> Cerrar Sesión
         </button>
       </div>
+
+      <AppointmentModal open={open} setOpen={setOpen}/>
     </div>
   );
 }

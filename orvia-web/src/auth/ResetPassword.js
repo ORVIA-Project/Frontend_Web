@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function ResetPasswordView() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
+    email: "",
     token: "",
     password: "",
     confirmPassword: "",
@@ -27,7 +28,7 @@ export default function ResetPasswordView() {
     }
 
     try {
-      const response = await fetch("http://tu-api.com/v1/auth/reset-password", {
+      const response = await fetch("https://api.orviaapp.com/v1/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -55,6 +56,15 @@ export default function ResetPasswordView() {
     <section className="InputBox2">
       <form onSubmit={handleSubmit}>
         <h2>Restablecer contraseña</h2>
+        <input
+          type="text"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className="Input2"
+        />
         <input
           type="text"
           name="token"

@@ -15,7 +15,7 @@ export default function ForgotPassword() {
     setMessage(null);
 
     try {
-      const response = await fetch("", {
+      const response = await fetch("https://api.orviaapp.com/v1/auth/request-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

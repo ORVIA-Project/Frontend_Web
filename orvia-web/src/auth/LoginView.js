@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { notification } from 'antd';
 import { useState } from "react";
-import logo from "../assets/LogoFinal.png";
+import logo from "../assets/LogoV2.png";
 import "../styles/LoginStyle.css"
 
 export default function LoginView({ switchToRegister }){
@@ -24,7 +24,7 @@ export default function LoginView({ switchToRegister }){
     setError("");
 
     try {
-      const response = await fetch("https://www.orviaapp.com/v1/auth/login", {
+      const response = await fetch("https://api.orviaapp.com/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,6 +45,7 @@ export default function LoginView({ switchToRegister }){
        if (data.access_token) {
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
+      localStorage.setItem("email", email); 
       navigate("/");
       
     

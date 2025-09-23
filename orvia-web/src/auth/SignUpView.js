@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/LogoFinal.png";
+import logo from "../assets/LogoV2.png";
 import "../styles/SignUpStyle.css";
 
 export default function RegisterView({ switchToLogin }) {
@@ -49,7 +49,7 @@ export default function RegisterView({ switchToLogin }) {
       const payload = { ...form };
       delete payload.confirmPassword; 
 
-      const response = await fetch("https://www.orviaapp.com/v1/auth/register", {
+      const response = await fetch("https://api.orviaapp.com/v1/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload), 
