@@ -8,10 +8,12 @@ import AuthCard from "./components/Card";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import ForgotPasswordView from "./auth/ForgotPassword";
 import SplashScreen from "./components/Splash";
+import ResetPasswordView from "./auth/ResetPassword";
+
 
 function AppLayout() {
   const location = useLocation();
-  const hideNavbar = ["/login", "/forgot-password"].includes(location.pathname);
+  const hideNavbar = ["/login", "/forgot-password", "/reset-password"].includes(location.pathname);
   const [showSplash, setShowSplash] = useState(true);
 
   if (showSplash) {
@@ -25,6 +27,7 @@ function AppLayout() {
         
         <Route path="/login" element={<AuthCard />} />
         <Route path="/forgot-password" element={<ForgotPasswordView />} />
+        <Route path="/reset-password" element={<ResetPasswordView />} />
 
         <Route
           path="/"
@@ -62,3 +65,5 @@ export default function App() {
     </Router>
   );
 }
+
+export const API_URL = process.env.REACT_APP_API_URL;

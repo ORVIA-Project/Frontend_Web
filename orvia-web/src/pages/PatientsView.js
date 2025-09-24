@@ -8,7 +8,7 @@ export default function PatientsView() {
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  // Simulación de fetch de pacientes
+  
   useEffect(() => {
     setLoading(true);
     // Aquí deberías hacer el fetch a tu API real
@@ -24,13 +24,11 @@ export default function PatientsView() {
     }, 1000);
   }, []);
 
-  // Filtrar pacientes por nombre o teléfono
   const handleSearch = (value) => {
     setSearchText(value);
     const filtered = data.filter(
       (patient) =>
-        patient.name.toLowerCase().includes(value.toLowerCase()) ||
-        patient.phone.includes(value)
+        patient.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredData(filtered);
   };

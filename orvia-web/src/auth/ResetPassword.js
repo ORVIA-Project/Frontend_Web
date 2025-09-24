@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/ResetStyle.css"
+import logo from "../assets/LogoV2.png"
+import { notification, Spin } from "antd";
 
 export default function ResetPasswordView() {
   const navigate = useNavigate();
+  const [api, contextHolder] = notification.useNotification();
   const [form, setForm] = useState({
     email: "",
-    token: "",
+    code: "",
     password: "",
     confirmPassword: "",
   });
@@ -21,8 +25,20 @@ export default function ResetPasswordView() {
     setIsLoading(true);
     setMessage(null);
 
+    if (form.password.length < 8) {
+      api.warning({
+        message: "Contraseña débil",
+        description: "Debe tener al menos 8 caracteres.",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     if (form.password !== form.confirmPassword) {
-      setMessage("❌ Las contraseñas no coinciden");
+      api.error({
+        description: "❌ Las contraseñas no coinciden",
+        placement: "topRight",
+      });
       setIsLoading(false);
       return;
     }
@@ -32,7 +48,8 @@ export default function ResetPasswordView() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          token: form.token,
+          email: form.email,
+          code: form.code,
           newPassword: form.password,
         }),
       });
@@ -41,7 +58,11 @@ export default function ResetPasswordView() {
 
       if (!response.ok) throw new Error(data?.message || "Error al cambiar la contraseña");
 
-      setMessage("✅ Contraseña restablecida con éxito.");
+      api.success({
+      message: "Contraseña restablecida",
+      description: "✅ Ahora puedes iniciar sesión con tu nueva contraseña.",
+      placement: "topRight",
+    });
       
       setTimeout(() => navigate("/login"), 1500);
 
@@ -53,9 +74,15 @@ export default function ResetPasswordView() {
   };
 
   return (
-    <section className="InputBox2">
-      <form onSubmit={handleSubmit}>
-        <h2>Restablecer contraseña</h2>
+    <>
+    {contextHolder}
+    <section className="InputBox">
+      <form onSubmit={handleSubmit} className="FormBox">
+        <h2 style={{
+              color: "#0A2472",
+              textAlign: "center",
+              fontSize: "5vh",
+            }}>Restablecer contraseña</h2>
         <input
           type="text"
           name="email"
@@ -63,16 +90,16 @@ export default function ResetPasswordView() {
           value={form.email}
           onChange={handleChange}
           required
-          className="Input2"
+          className="Input4"
         />
         <input
           type="text"
-          name="token"
+          name="code"
           placeholder="Código recibido"
-          value={form.token}
+          value={form.code}
           onChange={handleChange}
           required
-          className="Input2"
+          className="Input4"
         />
         <input
           type="password"
@@ -81,7 +108,7 @@ export default function ResetPasswordView() {
           value={form.password}
           onChange={handleChange}
           required
-          className="Input"
+          className="Input4"
         />
         <input
           type="password"
@@ -90,13 +117,23 @@ export default function ResetPasswordView() {
           value={form.confirmPassword}
           onChange={handleChange}
           required
-          className="Input"
+          className="Input4"
         />
         {message && <p>{message}</p>}
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Guardando..." : "Restablecer"}
+        <button type="submit" disabled={isLoading} className="SendPassword">
+          {isLoading ? <Spin size="small" /> : "Restablecer"}
         </button>
+
       </form>
     </section>
+
+    <section className="TextBox">
+        <img src={logo} alt="Logo" width="25%" />
+          <h1 className="WTitle">¡Ya casi lo tienes!</h1>
+            <h3 className="WSubtitle">
+              Confirma el codigo de acceso que llegó a tu correo y restablece tu contraseña por una nueva.
+            </h3>
+    </section>
+  </>
   );
 }

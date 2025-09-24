@@ -109,11 +109,7 @@ export default function RegisterView({ switchToLogin }) {
           <input type="text" name="office" placeholder="Consultorio" value={form.office} onChange={handleChange} className="Input" />
           
 
-          <p style={{ fontSize: "14px", alignSelf: 'start' }}>
-            <span onClick={() => navigate("/forgot-password")} style={{ cursor: "pointer", color: "#1F7A8C" }}>
-              ¿Olvidaste tu contraseña?{" "}
-            </span>
-          </p>
+          
 
           <p style={{ fontSize: "14px", alignSelf: 'end' }}>
             ¿Ya tienes cuenta?{" "}
