@@ -10,7 +10,7 @@ export default function NotificationsDrawer({ open, onClose }) {
       width={350}
     >
       <Empty
-        description="Sin notificaciones por ahora"
+        description="Sinz notificaciones por ahora"
         image={Empty.PRESENTED_IMAGE_SIMPLE}
       />
     </Drawer>

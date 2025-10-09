@@ -1,23 +1,58 @@
-import { FaBell, FaQuestionCircle, FaUserCircle } from "react-icons/fa";
-import { List, Spin, notification, Card, Drawer } from "antd";
+import { FaBell, FaQuestionCircle, FaUserCircle, FaSync } from "react-icons/fa";
+import { Spin, notification, Card, Drawer } from "antd";
 import { useEffect, useState } from "react";
 import FAQDrawer from "../components/FAQs";
 import UserProfile from "../components/UserProfile";
 import NotificationsDrawer from "../components/Notifications";
+import AppointmentDetails from "../components/AppointmentDetails";
+
 import "../styles/HomeStyle.css";
 
 export default function HomeView() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [isFAQOpen, setIsFAQOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotiOpen, setIsNotiOpen] = useState(false);
-
   const [profileImage, setProfileImage] = useState(null);
-
   const showFAQ = () => setIsFAQOpen(true);
   const closeFAQ = () => setIsFAQOpen(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (appointment) => {
+    setSelectedAppointment(appointment);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedAppointment(null);
+    setIsModalOpen(false);
+  };
+
+  const deleteAppointment = async (id) => {
+    try {
+      const res = await fetch(`https://api.orviaapp.com/v1/appointments/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("No se pudo eliminar la cita");
+
+      notification.success({
+        message: "Cita eliminada",
+        description: "La cita ha sido eliminada correctamente.",
+      });
+
+      setAppointments((prev) => prev.filter((appt) => appt.id !== id));
+      closeModal();
+    } catch (error) {
+      notification.error({
+        message: "Error",
+        description: error.message,
+      });
+    }
+  };
+
 
   const showProfile = () => setIsProfileOpen(true);
   const closeProfile = () => {
@@ -35,39 +70,66 @@ export default function HomeView() {
       setProfileImage(img);
     }
   }, []);
+  const fetchAppointments = async () => {
+    setLoading(true);
+    try {
+      const doctorId = localStorage.getItem("doctorId");
+
+      if (!doctorId) {
+        throw new Error("No se encontró el ID del doctor logueado");
+      }
+
+      const res = await fetch(`https://api.orviaapp.com/v1/appointments/doctor/${doctorId}`);
+      if (!res.ok) throw new Error("Error al obtener las citas del doctor");
+
+      const response = await res.json();
+      console.log("Respuesta cruda de la API:", response);
+
+      const list = response.data || [];
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      const todayAppointments = list
+        .filter(appt => {
+          const start = new Date(appt.start_time);
+          const sameDay =
+            start.getFullYear() === today.getFullYear() &&
+            start.getMonth() === today.getMonth() &&
+            start.getDate() === today.getDate();
+
+          return appt.status === "Agendada" && sameDay && start > now;
+        })
+        .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+        .map(appt => ({
+          id: appt.appointment_id,
+          patient: `${appt.first_name} ${appt.last_name}`,
+          date: new Date(appt.start_time).toLocaleDateString(),
+          time: new Date(appt.start_time).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          reason:
+            appt.appointment_type ||
+            appt.appointment_reason ||
+            "Sin motivo",
+        }));
+
+      setAppointments(todayAppointments);
+    } catch (err) {
+      notification.error({
+        message: "Error",
+        description: err.message || "No se pudieron cargar las citas",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAppointments = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch("http://localhost:3001/api/appointments");
-        if (!res.ok) throw new Error("Error al obtener las citas");
+  fetchAppointments();
+}, []);
 
-        const data = await res.json();
-        const sorted = data.sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
-        );
-        const upcoming = sorted.slice(0, 5);
 
-        setAppointments(upcoming);
-
-        notification.success({
-          message: "Citas cargadas",
-          description:
-            "Se obtuvieron correctamente las próximas citas",
-        });
-      } catch (err) {
-        notification.error({
-          message: "Error",
-          description: "No se pudieron cargar las citas",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAppointments();
-  }, []);
 
   return (
     <section className="home">
@@ -105,34 +167,71 @@ export default function HomeView() {
         <UserProfile />
       </Drawer>
       
-
-      <div style={{ padding: "20px" }}>
-        <h3>📅 Próximas citas</h3>
-        {loading ? (
-          <Spin tip="Cargando citas..." />
+      <h3 style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        📅 Citas de hoy
+        <FaSync
+          className={`icon refresh-icon ${loading ? "spinning" : ""}`}
+          onClick={fetchAppointments}
+          title="Actualizar citas"
+          style={{ cursor: "pointer", fontSize: "1.2rem", color: "#1677ff" }}
+        />
+        {loading && <Spin size="small" />}
+        </h3>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "1vw",
+          overflowY: "scroll",
+          maxHeight: "70%",
+        }}
+      >
+        {appointments.length > 0 ? (
+          appointments.map((item) => (
+            <Card
+              key={item.id}
+              title={item.patient}
+              onClick={() => openModal(item)}
+              hoverable
+              style={{
+                backgroundColor: "#E1E5F2",
+                borderRadius: "8px",
+                padding: "8px",
+                fontSize: "0.9vw",
+                cursor: "pointer",
+              }}
+            >
+              <p>
+                <b>Fecha:</b> {item.date}
+              </p>
+              <p>
+                <b>Hora:</b> {item.time}
+              </p>
+              <p>
+                <b>Motivo:</b> {item.reason}
+              </p>
+            </Card>
+          ))
         ) : (
-          <List
-            dataSource={appointments}
-            renderItem={(item) => (
-              <Card
-                key={item._id}
-                title={item.patient}
-                style={{ marginBottom: "12px" }}
-              >
-                <p>
-                  <b>Fecha:</b> {item.date}
-                </p>
-                <p>
-                  <b>Hora:</b> {item.time}
-                </p>
-                <p>
-                  <b>Motivo:</b> {item.reason}
-                </p>
-              </Card>
-            )}
-          />
+          <p style={{ gridColumn: "1 / -1", textAlign: "center", marginTop: "2rem", color: "GrayText"}}>
+            Hoy no hay citas programadas.
+          </p>
         )}
       </div>
+      <AppointmentDetails
+          visible={isModalOpen}
+          appointment={selectedAppointment}
+          onClose={closeModal}
+          onUpdate={(updated) => {
+            setAppointments((prev) =>
+              prev.map((a) =>
+                a.id === updated.appointment_id ? updated : a
+              )
+            );
+          }}
+          onDelete={deleteAppointment}
+        />
+
     </section>
   );
 }

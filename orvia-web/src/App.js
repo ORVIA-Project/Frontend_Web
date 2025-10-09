@@ -9,7 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import ForgotPasswordView from "./auth/ForgotPassword";
 import SplashScreen from "./components/Splash";
 import ResetPasswordView from "./auth/ResetPassword";
-
+import '@ant-design/v5-patch-for-react-19';
 
 function AppLayout() {
   const location = useLocation();

@@ -16,7 +16,6 @@ export default function LoginView({ switchToRegister }) {
     e.preventDefault();
     setError("");
 
-    // ✅ Validar antes de hacer fetch
     if (!email || !password) {
       setError("Por favor, completa todos los campos");
       return;
@@ -34,33 +33,31 @@ export default function LoginView({ switchToRegister }) {
 
       const data = await response.json();
 
-      if (data.access_token) {
-        localStorage.setItem("token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
-        localStorage.setItem("email", email);
+      if (data.tokens?.access_token && data.user?.doctor_id) {
+        localStorage.setItem("token", data.tokens.access_token);
+        localStorage.setItem("refresh_token", data.tokens.refresh_token);
+        localStorage.setItem("doctorId", data.user.doctor_id);
 
         api.success({
           message: "Inicio de sesión exitoso",
-          description: `Bienvenido, ${email}`,
+          description: `Bienvenido, ${data.user.first_name} ${data.user.last_name}`,
           placement: "topRight",
         });
 
         navigate("/");
       } else {
-        throw new Error("El backend no devolvió un token");
+        throw new Error("El backend no devolvió los datos esperados");
       }
     } catch (err) {
       api.error({
         message: "Error al iniciar sesión",
-        description: err.message || "Error en el login",
+        description: err.message || "Ocurrió un error inesperado",
         placement: "topRight",
       });
-      setError(err.message || "Error en el login");
     } finally {
       setLoading(false);
     }
-  };
-
+  }
   return (
     <>
       {contextHolder}

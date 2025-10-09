@@ -28,8 +28,6 @@ export default function RegisterView({ switchToLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validación de campos vacíos
     const requiredFields = ["first_name", "last_name", "email", "password", "confirmPassword", "phone"];
     const emptyField = requiredFields.find((field) => !form[field].trim());
 
@@ -42,7 +40,7 @@ export default function RegisterView({ switchToLogin }) {
       return;
     }
 
-    // Validación de contraseñas
+    
     if (form.password !== form.confirmPassword) {
       api.error({
         message: "Error",
