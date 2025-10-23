@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification } from "antd"; 
+import { notification, Input } from "antd"; 
 import logo from "../assets/LogoFinal.png";
 import "../styles/ForgotStyle.css";
 
@@ -64,7 +64,7 @@ export default function ForgotPassword() {
             Recuperar contraseña
           </h2>
 
-          <input
+          <Input
             type="email"
             placeholder="Correo electrónico"
             value={email}

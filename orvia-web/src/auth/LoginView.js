@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { notification } from 'antd';
+import { notification, Input } from 'antd';
 import { useState } from "react";
 import logo from "../assets/LogoV2.png";
 import "../styles/LoginStyle.css";
@@ -77,7 +77,7 @@ export default function LoginView({ switchToRegister }) {
         >
           <h2 style={{color: '#0A2472', textAlign: 'center', fontSize: '34px'}}>Iniciar Sesión</h2>
           
-          <input 
+          <Input 
             type="email" 
             placeholder="Correo electrónico" 
             value={email}
@@ -86,7 +86,7 @@ export default function LoginView({ switchToRegister }) {
             className="Input"
           />
           
-          <input 
+          <Input.Password 
             type="password" 
             placeholder="Contraseña" 
             value={password}

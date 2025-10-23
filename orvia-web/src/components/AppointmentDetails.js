@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, message, DatePicker, TimePicker, Select, Spin } from "antd";
+import { Modal, Form, Input, Button, message, DatePicker, TimePicker, Select, Spin, Popconfirm } from "antd";
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 
@@ -20,7 +20,6 @@ export default function AppointmentModal({ visible, onClose, appointment, onUpda
     setDoctorId(storedDoctorId);
   }, []);
 
-  // 🔹 Obtener detalles de la cita
   useEffect(() => {
     const fetchAppointmentDetails = async () => {
       if (!appointment?.id) return;
@@ -126,7 +125,6 @@ export default function AppointmentModal({ visible, onClose, appointment, onUpda
     }
   };
 
-  // 🔹 Marcar cita como completada
   const handleComplete = async () => {
     try {
       if (!doctorId || !appointmentId || !fullData) {
@@ -143,7 +141,7 @@ export default function AppointmentModal({ visible, onClose, appointment, onUpda
         start_time: fullData.start_time,
         appointment_type: values.appointment_type || fullData.appointment_type,
         appointment_reason: values.appointment_reason || fullData.appointment_reason,
-        status: "Cancelada",
+        status: "Cancelada", 
         notes: values.notes || fullData.notes,
         prescription: values.prescription || fullData.prescription,
       };
@@ -162,14 +160,14 @@ export default function AppointmentModal({ visible, onClose, appointment, onUpda
         body: JSON.stringify(completedAppointment),
       });
 
-      if (!res.ok) throw new Error("Error al marcar como completada");
+      if (!res.ok) throw new Error("Verificar los campos");
 
-      message.success("Cita marcada como completada");
+      message.success("Cita Cancelada");
       onUpdate();
       onClose();
     } catch (err) {
-      console.error("❌ Error al completar cita:", err);
-      message.error("No se pudo completar la cita");
+      console.error("❌ Error al cancelar la cita:", err);
+      message.error(err.message || "No se pudo cancelar la cita");
     } finally {
       setLoading(false);
     }
@@ -227,17 +225,27 @@ export default function AppointmentModal({ visible, onClose, appointment, onUpda
             <Button onClick={onClose}>Cancelar</Button>
             <div>
               <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-                disabled={!fullData}
-                style={{ marginRight: 10 }}
-              >
-                Guardar
-              </Button>
-              <Button danger onClick={handleComplete} loading={loading}>
-                Marcar como completada
-              </Button>
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            disabled={!fullData}
+            style={{ marginRight: 10 }}
+          >
+            Guardar
+          </Button>
+
+          <Popconfirm
+            title="¿Estás seguro de cancelar esta cita?"
+            description="Esta acción no se puede deshacer"
+            onConfirm={handleComplete}
+            okText="Cancelar"
+            cancelText="No"
+            okButtonProps={{ danger: true }}
+          >
+            <Button danger loading={loading}>
+              Cancelar cita
+            </Button>
+          </Popconfirm>
             </div>
           </div>
         </Form>

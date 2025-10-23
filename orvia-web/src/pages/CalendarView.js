@@ -1,75 +1,121 @@
-import { Badge, Calendar } from 'antd';
-import "../styles/CalendarStyle.css"
+import { useEffect, useState } from "react";
+import { Calendar, Badge, Spin, message } from "antd";
+import dayjs from "dayjs";
+import AppointmentDetails from "../components/AppointmentDetails";
 
+export default function CalendarView() {
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-const getListData = value => {
-  let listData = [];
-  switch (value.date()) {
-    case 8:
-      listData = [
-        { type: 'warning', content: 'This is warning event.' },
-        { type: 'success', content: 'This is usual event.' },
-      ];
-      break;
-    case 10:
-      listData = [
-        { type: 'warning', content: 'This is warning event.' },
-        { type: 'success', content: 'This is usual event.' },
-        { type: 'error', content: 'This is error event.' },
-      ];
-      break;
-    case 15:
-      listData = [
-        { type: 'warning', content: 'This is warning event' },
-        { type: 'success', content: 'This is very long usual event......' },
-        { type: 'error', content: 'This is error event 1.' },
-        { type: 'error', content: 'This is error event 2.' },
-        { type: 'error', content: 'This is error event 3.' },
-        { type: 'error', content: 'This is error event 4.' },
-      ];
-      break;
-    default:
-  }
-  return listData || [];
-};
-const getMonthData = value => {
-  if (value.month() === 8) {
-    return 1394;
-  }
-};
-export default function CalendarView(){
-
-    const monthCellRender = value => {
-    const num = getMonthData(value);
-    return num ? (
-      <div className="notes-month">
-        <section>{num}</section>
-        <span>Backlog number</span>
-      </div>
-    ) : null;
+  const openModal = (appointment) => {
+    setSelectedAppointment(appointment);
+    setIsModalOpen(true);
   };
-  const dateCellRender = value => {
-    const listData = getListData(value);
+
+  const closeModal = () => {
+    setSelectedAppointment(null);
+    setIsModalOpen(false);
+  };
+
+  const handleUpdate = (updated) => {
+    if (!updated) return;
+    setAppointments((prev) =>
+      prev.map((appt) =>
+        appt.appointment_id === updated.appointment_id ? updated : appt
+      )
+    );
+  };
+
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true);
+      const storedDoctorId = localStorage.getItem("doctorId");
+
+      if (!storedDoctorId) {
+        throw new Error("No se encontró el doctorId en localStorage");
+      }
+
+      const res = await fetch(
+        `https://api.orviaapp.com/v1/appointments/doctor/${storedDoctorId}`
+      );
+      if (!res.ok) throw new Error("Error al obtener las citas del doctor");
+
+      const response = await res.json();
+      const data = response.data || [];
+      setAppointments(data);
+    } catch (err) {
+      message.error(err.message || "No se pudieron cargar las citas");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+
+    const interval = setInterval(() => {
+      fetchAppointments();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const dateCellRender = (value) => {
+    const day = value.format("YYYY-MM-DD");
+
+    const dayAppointments = appointments.filter((appt) => {
+      const apptDate = dayjs(appt.start_time).format("YYYY-MM-DD");
+      const isSameDay = apptDate === day;
+      const notCancelled =
+        appt.status?.toLowerCase() !== "cancelada" &&
+        appt.appointment_reason?.toLowerCase() !== "cancelada";
+      return isSameDay && notCancelled;
+    });
+
+    if (!dayAppointments.length) return null;
+
     return (
-      <ul className="events">
-        {listData.map(item => (
-          <li key={item.content}>
-            <Badge status={item.type} text={item.content} />
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        {dayAppointments.map((item) => (
+          <li
+            key={item.appointment_id}
+            style={{ cursor: "pointer" }}
+            onClick={() => openModal(item)}
+          >
+            <Badge
+              status="processing"
+              text={`${item.first_name} ${item.last_name} - ${dayjs(
+                item.start_time
+              ).format("HH:mm")}`}
+            />
           </li>
         ))}
       </ul>
     );
   };
-  const cellRender = (current, info) => {
-    if (info.type === 'date') return dateCellRender(current);
-    if (info.type === 'month') return monthCellRender(current);
-    return info.originNode;
-  };
 
-    return(
-        <div className="calendar-container">
-        
+  return (
+    <section style={{ padding: "1vw" }}>
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "2rem" }}>
+          <Spin size="large" />
         </div>
-    );
+      ) : (
+        <Calendar dateCellRender={dateCellRender} />
+      )}
 
+      <AppointmentDetails
+        visible={isModalOpen}
+        onClose={closeModal}
+        appointment={
+          selectedAppointment
+            ? { id: selectedAppointment.appointment_id }
+            : null
+        }
+        onUpdate={handleUpdate}
+      />
+    </section>
+  );
 }

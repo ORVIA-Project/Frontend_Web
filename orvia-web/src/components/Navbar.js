@@ -21,33 +21,33 @@ export default function Navbar() {
       <ul className="menu">
         <li>
           <Link to="/" className="menu-item">
-            <FaHome className="icon" /> INICIO
+            <FaHome className="icon" /> <p className="fontAdaptativeTitle">INICIO</p>
           </Link>
         </li>
         <li>
           <Link to="/calendar" className="menu-item">
-            <FaCalendarAlt className="icon" /> CALENDARIO
+            <FaCalendarAlt className="icon" /> <p className="fontAdaptativeTitle">CALENDARIO</p>
           </Link>
         </li>
         <li>
           <Link to="/patients" className="menu-item">
-            <FaFolderOpen className="icon" /> PACIENTES
+            <FaFolderOpen className="icon" /> <p className="fontAdaptativeTitle">PACIENTES</p>
           </Link>
         </li>
       </ul>
 
       <div className="actions">
         <button className="action-btn" onClick={() => setOpen(true)}>
-          <FaPlusCircle className="icon" /> Agendar Cita
+          <FaPlusCircle className="icon-button" /> <p className="fontAdaptative"> Agendar Cita</p>
         </button>
         <button className="action-btn">
-          <FaClipboardList className="icon" /> Crear registro
+          <FaClipboardList className="icon-button" /> <p className="fontAdaptative">Crear registro</p>
         </button>
       </div>
 
       <div className="logout">
         <button className="logout-btn" onClick={handleLogout}>
-          <FaSignOutAlt className="icon" /> Cerrar Sesión
+          <FaSignOutAlt className="icon-button" /> <p className="fontAdaptative">Cerrar Sesión</p>
         </button>
       </div>
 

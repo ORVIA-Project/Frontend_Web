@@ -1,9 +1,22 @@
 import { Modal, Form, Input, DatePicker, TimePicker, Select, notification } from "antd";
-import dayjs from "dayjs";
+
+const range = (start, end) => {
+  const result = [];
+  for (let i = start; i < end; i++) {
+    result.push(i);
+  }
+  return result;
+};
 
 export default function AppointmentModal({ open, setOpen }) {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const disabledHours = () => {
+    const morningDisabled = range(0, 7); 
+    const eveningDisabled = range(19, 24);
+    
+    return [...morningDisabled, ...eveningDisabled];
+  };
 
   const handleOk = () => {
     form
@@ -125,7 +138,13 @@ export default function AppointmentModal({ open, setOpen }) {
             label="Hora"
             rules={[{ required: true, message: "Selecciona la hora" }]}
           >
-            <TimePicker format="HH:mm" style={{ width: "100%" }} />
+            <TimePicker
+              format="HH:mm"
+              style={{ width: "100%" }}
+              disabledHours={disabledHours}
+              minuteStep={5}
+              hideDisabledOptions
+            />
           </Form.Item>
 
           <Form.Item

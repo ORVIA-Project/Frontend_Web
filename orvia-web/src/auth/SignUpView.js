@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification } from "antd";
+import { notification, Input } from "antd";
 import logo from "../assets/LogoV2.png";
 import "../styles/SignUpStyle.css";
 
@@ -107,15 +107,15 @@ export default function RegisterView({ switchToLogin }) {
         >
           <h2 style={{ color: "#0A2472", textAlign: "center", fontSize: "34px" }}>Crear cuenta</h2>
 
-          <input type="text" name="first_name" placeholder="Nombre" value={form.first_name} onChange={handleChange} className="Input2" />
-          <input type="text" name="last_name" placeholder="Apellido" value={form.last_name} onChange={handleChange} className="Input2" />
-          <input type="email" name="email" placeholder="Correo electrónico" value={form.email} onChange={handleChange} className="Input2" />
-          <input type="text" name="phone" placeholder="Teléfono" value={form.phone} onChange={handleChange} className="Input" />
-          <input type="password" name="password" placeholder="Contraseña" value={form.password} onChange={handleChange} className="Input" />
-          <input type="password" name="confirmPassword" placeholder="Confirmar contraseña" value={form.confirmPassword} onChange={handleChange} className="Input" />
-          <input type="text" name="specialty" placeholder="Especialidad" value={form.specialty} onChange={handleChange} className="Input" />
-          <input type="text" name="license_number" placeholder="Número de licencia" value={form.license_number} onChange={handleChange} className="Input" />
-          <input type="text" name="office" placeholder="Consultorio" value={form.office} onChange={handleChange} className="Input" />
+          <Input type="text" name="first_name" placeholder="Nombre" value={form.first_name} onChange={handleChange} className="Input2" />
+          <Input type="text" name="last_name" placeholder="Apellido" value={form.last_name} onChange={handleChange} className="Input2" />
+          <Input type="email" name="email" placeholder="Correo electrónico" value={form.email} onChange={handleChange} className="Input2" />
+          <Input type="text" name="phone" placeholder="Teléfono" value={form.phone} onChange={handleChange} className="Input2" />
+          <Input.Password type="password" name="password" placeholder="Contraseña" value={form.password} onChange={handleChange} className="Input2" />
+          <Input.Password type="password" name="confirmPassword" placeholder="Confirmar contraseña" value={form.confirmPassword} onChange={handleChange} className="Input" />
+          <Input type="text" name="specialty" placeholder="Especialidad" value={form.specialty} onChange={handleChange} className="Input2" />
+          <Input type="text" name="license_number" placeholder="Número de licencia" value={form.license_number} onChange={handleChange} className="Input2" />
+          <Input type="text" name="office" placeholder="Consultorio" value={form.office} onChange={handleChange} className="Input2" />
 
           <p style={{ fontSize: "14px", alignSelf: "end" }}>
             ¿Ya tienes cuenta?{" "}

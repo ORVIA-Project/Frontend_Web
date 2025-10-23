@@ -5,7 +5,6 @@ import FAQDrawer from "../components/FAQs";
 import UserProfile from "../components/UserProfile";
 import NotificationsDrawer from "../components/Notifications";
 import AppointmentDetails from "../components/AppointmentDetails";
-
 import "../styles/HomeStyle.css";
 
 export default function HomeView() {
@@ -15,10 +14,22 @@ export default function HomeView() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotiOpen, setIsNotiOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const showFAQ = () => setIsFAQOpen(true);
-  const closeFAQ = () => setIsFAQOpen(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [autoRefreshing, setAutoRefreshing] = useState(false);
+
+  const showFAQ = () => setIsFAQOpen(true);
+  const closeFAQ = () => setIsFAQOpen(false);
+
+  const showProfile = () => setIsProfileOpen(true);
+  const closeProfile = () => {
+    setIsProfileOpen(false);
+    const img = localStorage.getItem("selectedProfileImage");
+    if (img) setProfileImage(img);
+  };
+
+  const showNotifications = () => setIsNotiOpen(true);
+  const closeNotifications = () => setIsNotiOpen(false);
 
   const openModal = (appointment) => {
     setSelectedAppointment(appointment);
@@ -53,38 +64,16 @@ export default function HomeView() {
     }
   };
 
-
-  const showProfile = () => setIsProfileOpen(true);
-  const closeProfile = () => {
-    setIsProfileOpen(false);
-    const img = localStorage.getItem("selectedProfileImage");
-    if (img) setProfileImage(img);
-  };
-
-  const showNotifications = () => setIsNotiOpen(true);
-  const closeNotifications = () => setIsNotiOpen(false);
-
-  useEffect(() => {
-    const img = localStorage.getItem("selectedProfileImage");
-    if (img) {
-      setProfileImage(img);
-    }
-  }, []);
   const fetchAppointments = async () => {
     setLoading(true);
     try {
       const doctorId = localStorage.getItem("doctorId");
-
-      if (!doctorId) {
-        throw new Error("No se encontró el ID del doctor logueado");
-      }
+      if (!doctorId) throw new Error("No se encontró el ID del doctor logueado");
 
       const res = await fetch(`https://api.orviaapp.com/v1/appointments/doctor/${doctorId}`);
       if (!res.ok) throw new Error("Error al obtener las citas del doctor");
 
       const response = await res.json();
-      console.log("Respuesta cruda de la API:", response);
-
       const list = response.data || [];
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -125,11 +114,25 @@ export default function HomeView() {
     }
   };
 
+  
   useEffect(() => {
-  fetchAppointments();
-}, []);
+    const img = localStorage.getItem("selectedProfileImage");
+    if (img) {
+      setProfileImage(img);
+    }
+  }, []);
 
+  
+  useEffect(() => {
+    fetchAppointments();
+    const interval = setInterval(async () => {
+      setAutoRefreshing(true);
+      await fetchAppointments();
+      setTimeout(() => setAutoRefreshing(false), 800);
+    }, 10000);
 
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="home">
@@ -154,9 +157,8 @@ export default function HomeView() {
       </header>
 
       <FAQDrawer open={isFAQOpen} onClose={closeFAQ} />
-
       <NotificationsDrawer open={isNotiOpen} onClose={closeNotifications} />
-      
+
       <Drawer
         title="Perfil de Usuario"
         placement="right"
@@ -166,17 +168,11 @@ export default function HomeView() {
       >
         <UserProfile />
       </Drawer>
-      
-      <h3 style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+
+      <h3 style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "1vw"}}>
         📅 Citas de hoy
-        <FaSync
-          className={`icon refresh-icon ${loading ? "spinning" : ""}`}
-          onClick={fetchAppointments}
-          title="Actualizar citas"
-          style={{ cursor: "pointer", fontSize: "1.2rem", color: "#1677ff" }}
-        />
-        {loading && <Spin size="small" />}
-        </h3>
+      </h3>
+
       <div
         style={{
           display: "grid",
@@ -213,25 +209,34 @@ export default function HomeView() {
             </Card>
           ))
         ) : (
-          <p style={{ gridColumn: "1 / -1", textAlign: "center", marginTop: "2rem", color: "GrayText"}}>
+          <p
+            style={{
+              gridColumn: "1 / -1",
+              textAlign: "center",
+              marginTop: "2rem",
+              color: "GrayText",
+              fontSize: "0.9vw"
+            }}
+          >
             Hoy no hay citas programadas.
           </p>
         )}
       </div>
-      <AppointmentDetails
-          visible={isModalOpen}
-          appointment={selectedAppointment}
-          onClose={closeModal}
-          onUpdate={(updated) => {
-            setAppointments((prev) =>
-              prev.map((a) =>
-                a.id === updated.appointment_id ? updated : a
-              )
-            );
-          }}
-          onDelete={deleteAppointment}
-        />
 
+      <AppointmentDetails
+        visible={isModalOpen}
+        appointment={selectedAppointment}
+        onClose={closeModal}
+        onUpdate={(updated) => {
+          if (!updated) return;
+          const newId = updated.id || updated.appointment_id;
+          if (!newId) return;
+          setAppointments((prev) =>
+            prev.map((a) => (a.id === newId ? { ...a, ...updated } : a))
+          );
+        }}
+        onDelete={deleteAppointment}
+      />
     </section>
   );
 }

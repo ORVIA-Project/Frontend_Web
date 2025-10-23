@@ -1,14 +1,14 @@
 .calendar-container {
   width: 100%;
-  max-width: 1000px;   /* límite en pantallas grandes */
-  margin: 0 auto;      /* centrar en horizontal */
+  max-width: 1000px;
+  margin: 0 auto; 
   padding: 10px;
   box-sizing: border-box;
 }
 
 .ant-picker-calendar {
-  width: 100% !important;   /* asegura que se ajuste al contenedor */
-  height: auto !important;  /* deja que crezca dinámicamente */
+  width: 100% !important;
+  height: auto !important;
 }
 .events {
   margin: 0;

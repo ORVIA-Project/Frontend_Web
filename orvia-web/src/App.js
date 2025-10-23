@@ -21,7 +21,7 @@ function AppLayout() {
   }
 
   return (
-    <div style={{ display: "flex", height: "100dvh" }}>
+    <div style={{ display: "flex", height: "100vh" }}>
       {!hideNavbar && <Navbar />}
       <Routes>
         

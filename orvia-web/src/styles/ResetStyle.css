@@ -5,9 +5,8 @@
     border-radius: 10px;
     height: 5vh;
     padding-left: 5%;
-    width: 55%;
+    width: 75%;
 }
-
 
 .SendPassword{
     background-color: #0A2472;
@@ -20,5 +19,9 @@
 }
 
 .FormBox{
+    display: flex;
+    flex-direction: column;
     text-align: center;
+    align-items: center;
+    gap: 1vh;
 }

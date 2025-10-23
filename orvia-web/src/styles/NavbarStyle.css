@@ -19,7 +19,7 @@
 .menu-item {
   display: flex;
   align-items: center;
-  padding: 12px 10px;
+  padding: 0 10px;
   color: white;
   text-decoration: none;
   font-weight: bold;
@@ -33,6 +33,12 @@
 
 .icon {
   margin-right: 1vw;
+  font-size: 1.3vw;
+}
+
+.icon-button{
+  padding: 5px 5px 5px 0;
+  font-size: 0.8vw;
 }
 
 .actions {
@@ -46,10 +52,10 @@
 .action-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px;
   border: none;
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: #1F7A8C;
   color: white;
   font-weight: bold;
@@ -58,7 +64,7 @@
 }
 
 .action-btn:hover {
-  background-color: #1F7A8C;
+  background-color: #4ddffcb5;
 }
 
 .logout {
@@ -76,9 +82,16 @@
   color: rgb(255, 255, 255);
   font-size: 14px;
   cursor: pointer;
-  
 }
 
 .logout-btn:hover {
   color: #e11b1b;
+}
+
+.fontAdaptative{
+  font-size: 0.8vw;
+}
+
+.fontAdaptativeTitle{
+  font-size: 1.2vw;
 }

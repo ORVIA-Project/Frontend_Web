@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ResetStyle.css"
 import logo from "../assets/LogoV2.png"
-import { notification, Spin } from "antd";
+import { notification, Spin, Input, Typography } from "antd";
 
 export default function ResetPasswordView() {
+  const { Title } = Typography;
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
   const [form, setForm] = useState({
@@ -83,7 +84,7 @@ export default function ResetPasswordView() {
               textAlign: "center",
               fontSize: "5vh",
             }}>Restablecer contraseña</h2>
-        <input
+        <Input
           type="text"
           name="email"
           placeholder="Email"
@@ -92,7 +93,9 @@ export default function ResetPasswordView() {
           required
           className="Input4"
         />
-        <input
+        <Title level={5}>Código Recibido</Title>
+        <Input.OTP
+          length={6}
           type="text"
           name="code"
           placeholder="Código recibido"
@@ -101,7 +104,7 @@ export default function ResetPasswordView() {
           required
           className="Input4"
         />
-        <input
+        <Input.Password
           type="password"
           name="password"
           placeholder="Nueva contraseña"
@@ -110,7 +113,7 @@ export default function ResetPasswordView() {
           required
           className="Input4"
         />
-        <input
+        <Input.Password
           type="password"
           name="confirmPassword"
           placeholder="Confirmar contraseña"
