@@ -5,6 +5,7 @@ import CalendarView from "./pages/CalendarView";
 import PatientsView from "./pages/PatientsView";
 import Navbar from "./components/Navbar";
 import AuthCard from "./components/Card";
+import PatientDetail from "./pages/PatientsInfoView";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import ForgotPasswordView from "./auth/ForgotPassword";
 import SplashScreen from "./components/Splash";
@@ -50,6 +51,14 @@ function AppLayout() {
           element={
             <ProtectedRoute>
               <PatientsView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/appointments/:id"
+          element={
+            <ProtectedRoute>
+              <PatientDetail />
             </ProtectedRoute>
           }
         />

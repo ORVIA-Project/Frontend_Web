@@ -40,9 +40,6 @@ export default function Navbar() {
         <button className="action-btn" onClick={() => setOpen(true)}>
           <FaPlusCircle className="icon-button" /> <p className="fontAdaptative"> Agendar Cita</p>
         </button>
-        <button className="action-btn">
-          <FaClipboardList className="icon-button" /> <p className="fontAdaptative">Crear registro</p>
-        </button>
       </div>
 
       <div className="logout">

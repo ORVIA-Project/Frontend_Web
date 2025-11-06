@@ -10,7 +10,6 @@ export default function AppointmentModal({ visible, onClose, appointment, onUpda
   const [doctorId, setDoctorId] = useState(null);
   const [form] = Form.useForm();
 
-  // 🔹 Obtener el ID del doctor almacenado en localStorage
   useEffect(() => {
     const storedDoctorId = localStorage.getItem("doctorId");
     if (!storedDoctorId) {
