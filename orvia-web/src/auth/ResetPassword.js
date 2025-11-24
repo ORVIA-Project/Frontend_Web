@@ -93,8 +93,7 @@ export default function ResetPasswordView() {
           required
           className="Input4"
         />
-        <Title level={5}>Código Recibido</Title>
-        <Input.OTP
+        <Input
           length={6}
           type="text"
           name="code"

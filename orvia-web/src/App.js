@@ -29,7 +29,7 @@ function AppLayout() {
         <Route path="/login" element={<AuthCard />} />
         <Route path="/forgot-password" element={<ForgotPasswordView />} />
         <Route path="/reset-password" element={<ResetPasswordView />} />
-
+        
         <Route
           path="/"
           element={

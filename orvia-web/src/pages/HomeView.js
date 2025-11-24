@@ -1,5 +1,5 @@
 import { FaBell, FaQuestionCircle, FaUserCircle, FaSync } from "react-icons/fa";
-import { Spin, notification, Card, Drawer } from "antd";
+import { notification, Card, Drawer } from "antd";
 import { useEffect, useState } from "react";
 import FAQDrawer from "../components/FAQs";
 import UserProfile from "../components/UserProfile";
@@ -169,7 +169,7 @@ export default function HomeView() {
         <UserProfile />
       </Drawer>
 
-      <h3 style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "1vw"}}>
+      <h3 style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "1.2vw"}}>
         📅 Citas de hoy
       </h3>
 

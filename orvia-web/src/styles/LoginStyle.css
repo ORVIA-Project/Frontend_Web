@@ -64,3 +64,12 @@
 .LoginButton:hover{
      background-color: #0a2472c4;
 }
+
+.GoogleButton{
+    width: "300px";
+    margin-top: "10px";
+    display: "flex";
+    align-items: "center";
+    justify-content: "center";
+    gap: "10px";
+}

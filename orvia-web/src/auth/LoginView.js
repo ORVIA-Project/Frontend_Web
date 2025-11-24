@@ -1,16 +1,88 @@
+/* global google */
 import { useNavigate } from "react-router-dom";
-import { notification, Input } from 'antd';
+import { notification, Input, Button } from "antd";
+import { GoogleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import logo from "../assets/LogoV2.png";
 import "../styles/LoginStyle.css";
 
 export default function LoginView({ switchToRegister }) {
   const navigate = useNavigate();
+  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+
+  const handleGoogleResponse = async (response) => {
+    try {
+      const credential = response.credential;
+      const payload = JSON.parse(atob(credential.split(".")[1]));
+
+      const providerPayload = {
+        providerName: "google",
+        providerUid: payload.sub,
+        email: payload.email,
+        firstName: payload.given_name || "",
+        lastName: payload.family_name || "",
+        intendedRole: {}
+      };
+
+      const res = await fetch("https://api.orviaapp.com/v1/auth/register/provider", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(providerPayload),
+      });
+
+      if (!res.ok) throw new Error("Error al autenticarse con Google");
+
+      const data = await res.json();
+
+      localStorage.setItem("token", data.tokens.access_token);
+      localStorage.setItem("refresh_token", data.tokens.refresh_token);
+      localStorage.setItem("doctorId", data.user.doctor_id);
+      localStorage.setItem("UserId", String(data.user.user_id));
+
+      const userProfile = {
+        userId: data.user.user_id,
+        nombre: data.user.first_name || "",
+        apellidos: data.user.last_name || "",
+        correo: data.user.email || "",
+        telefono: data.user.phone || "",
+        consultorio: data.user.office || ""
+      };
+
+      localStorage.setItem("loggedUser", JSON.stringify(userProfile));
+
+      api.success({
+        message: "Inicio de sesión con Google",
+        description: `Bienvenido, ${data.user.first_name}`,
+        placement: "topRight",
+      });
+
+      navigate("/");
+
+    } catch (err) {
+      api.error({
+        message: "Error al iniciar sesión con Google",
+        description: err.message,
+        placement: "topRight",
+      });
+    }
+  };
+
+
+  const googleLogin = () => {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleResponse,
+    });
+
+    google.accounts.id.prompt();
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +109,18 @@ export default function LoginView({ switchToRegister }) {
         localStorage.setItem("token", data.tokens.access_token);
         localStorage.setItem("refresh_token", data.tokens.refresh_token);
         localStorage.setItem("doctorId", data.user.doctor_id);
+        localStorage.setItem("UserId", String(data.user.user_id));
+
+        const userProfile = {
+          userId: data.user.user_id,
+          nombre: data.user.first_name || "",
+          apellidos: data.user.last_name || "",
+          correo: data.user.email || "",
+          telefono: data.user.phone || "",
+          consultorio: data.user.office || ""
+        };
+
+        localStorage.setItem("loggedUser", JSON.stringify(userProfile));
 
         api.success({
           message: "Inicio de sesión exitoso",
@@ -57,10 +141,12 @@ export default function LoginView({ switchToRegister }) {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
   return (
     <>
       {contextHolder}
+
       <section className="TextBox">
         <img src={logo} alt="Logo" width="25%" />
         <h1 className="WTitle">¡Hola! Qué gusto tenerte de vuelta</h1>
@@ -69,7 +155,7 @@ export default function LoginView({ switchToRegister }) {
           Ingresa y disfruta de todo lo que tenemos preparado para ti
         </h3>
       </section>
-          
+
       <section className="InputBox">
         <form 
           onSubmit={handleSubmit} 
@@ -96,14 +182,24 @@ export default function LoginView({ switchToRegister }) {
           />
 
           {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
-          
-          <p style={{ fontSize: "14px", alignSelf: 'start' }}>
-            <span onClick={() => navigate("/forgot-password")} style={{ cursor: "pointer", color: "#1F7A8C" }}>
-              ¿Olvidaste tu contraseña?{" "}
-            </span>
+
+          <p style={{ fontSize: "14px", alignSelf: 'start', cursor: "pointer", color: "#1F7A8C" }}
+             onClick={() => navigate("/forgot-password")}
+          >
+            ¿Olvidaste tu contraseña?
           </p>
 
-          <p style={{ fontSize: "14px" , alignSelf: 'end'}}>
+          <Button
+            type="default"
+            icon={<GoogleOutlined />}
+            size="large"
+            className={"GoogleButton"}
+            onClick={googleLogin}
+          >
+            Continuar con Google
+          </Button>
+
+          <p style={{ fontSize: "14px" , alignSelf: 'end' }}>
             ¿No tienes cuenta?{" "}
             <span onClick={switchToRegister} style={{cursor: "pointer", color: "#1F7A8C"}}>
               Regístrate
@@ -115,6 +211,7 @@ export default function LoginView({ switchToRegister }) {
               {loading ? "Cargando..." : "Iniciar Sesión"}
             </button>
           </div>
+
         </form>
       </section>
     </>
