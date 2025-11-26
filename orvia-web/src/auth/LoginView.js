@@ -22,21 +22,28 @@ export default function LoginView({ switchToRegister }) {
       const payload = JSON.parse(atob(credential.split(".")[1]));
 
       const providerPayload = {
-        providerName: "google",
+        providerName: "GOOGLE",
         providerUid: payload.sub,
         email: payload.email,
         firstName: payload.given_name || "",
         lastName: payload.family_name || "",
-        intendedRole: {}
+        intendedRole: "Doctor"
       };
+        console.log("Payload enviado al backend:", providerPayload);
 
+        
       const res = await fetch("https://api.orviaapp.com/v1/auth/register/provider", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(providerPayload),
       });
 
-      if (!res.ok) throw new Error("Error al autenticarse con Google");
+      if (!res.ok) {
+        const errText = await res.text();
+        console.log("ERROR DEL BACKEND:", errText);
+        throw new Error(errText || "Error al autenticarse con Google");
+      }
+
 
       const data = await res.json();
 
@@ -187,6 +194,10 @@ export default function LoginView({ switchToRegister }) {
              onClick={() => navigate("/forgot-password")}
           >
             ¿Olvidaste tu contraseña?
+          </p>
+
+          <p style={{display:"flex", justifyContent: "center", color: "#8e8e8eff"}}>
+            Ingresa con:
           </p>
 
           <Button

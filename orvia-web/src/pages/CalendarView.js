@@ -32,7 +32,6 @@ export default function CalendarView() {
   };
 
   const fetchAppointments = async () => {
-    // Previene solapamientos si una request sigue en progreso
     if (isFetchingRef.current) return;
     isFetchingRef.current = true;
 
@@ -59,20 +58,19 @@ export default function CalendarView() {
     }
   };
 
-  // POLLING + limpieza + evitar solapamientos
   useEffect(() => {
     fetchAppointments();
 
-    // Inicia polling cada 30s
+    
     pollingRef.current = setInterval(fetchAppointments, 30000);
 
-    // Se limpia al desmontar
+    
     return () => {
       clearInterval(pollingRef.current);
     };
   }, []);
 
-  // Renderiza citas del día
+  
   const dateCellRender = (value) => {
     const day = value.format("YYYY-MM-DD");
     const dayAppointments = appointments.filter((appt) => {
