@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { notification } from "antd";
+import { notification, Avatar } from "antd";
 import "../styles/UserProfileStyle.css";
+import { UserOutlined } from '@ant-design/icons';
 
-import avatar1 from "../assets/UserPic1.jpg";
-import avatar2 from "../assets/UserPic2.jpg";
-import avatar3 from "../assets/UserPic3.jpg";
 
 export default function UserProfile() {
-  const avatars = [avatar1, avatar2, avatar3];
+
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -19,20 +17,12 @@ export default function UserProfile() {
     consultorio: "Consultorio 2",
   });
 
-  const [selectedImage, setSelectedImage] = useState(avatar1);
   const [isEditing, setIsEditing] = useState(false);
-
   const [tempData, setTempData] = useState({});
-  const [tempImage, setTempImage] = useState(null);
 
   useEffect(() => {
-    const storedImage = localStorage.getItem("selectedProfileImage");
     const storedUser = localStorage.getItem("userProfileData");
     const loggedUser = localStorage.getItem("loggedUser");
-
-    if (storedImage) {
-      setSelectedImage(storedImage);
-    }
 
     if (loggedUser) {
       setUserData(JSON.parse(loggedUser));
@@ -43,13 +33,11 @@ export default function UserProfile() {
 
   const handleEdit = () => {
     setIsEditing(true);
-    setTempImage(selectedImage);
     setTempData(userData);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setTempImage(null);
     setTempData({});
   };
 
@@ -104,10 +92,8 @@ export default function UserProfile() {
         userId: Number(userId),
       };
 
-      setSelectedImage(tempImage);
       setUserData(updatedUser);
 
-      localStorage.setItem("selectedProfileImage", tempImage);
       localStorage.setItem("userProfileData", JSON.stringify(updatedUser));
       localStorage.setItem("loggedUser", JSON.stringify(updatedUser));
 
@@ -140,11 +126,7 @@ export default function UserProfile() {
 
       <section className="profile-container">
         <div className="profile-image-container">
-          <img
-            src={isEditing && tempImage ? tempImage : selectedImage}
-            alt="Foto de perfil"
-            className="profile-image"
-          />
+          <Avatar size={64} icon={<UserOutlined />} />
         </div>
 
         <div className="profile-fields">
@@ -206,21 +188,6 @@ export default function UserProfile() {
 
         {isEditing ? (
           <>
-            <h4>Selecciona una imagen de perfil</h4>
-
-            <div className="avatar-list">
-              {avatars.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt={`avatar-${i}`}
-                  className={`avatar-option ${
-                    tempImage === img ? "selected" : ""
-                  }`}
-                  onClick={() => setTempImage(img)}
-                />
-              ))}
-            </div>
 
             <div className="edit-actions">
               <button className="btn-cancel" onClick={handleCancel}>

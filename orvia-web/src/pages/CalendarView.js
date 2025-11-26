@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Calendar, Badge, Spin, message } from "antd";
 import dayjs from "dayjs";
+import "../styles/CalendarStyle.css"
 import AppointmentDetails from "../components/AppointmentDetails";
 
 export default function CalendarView() {
@@ -111,7 +112,8 @@ export default function CalendarView() {
           <Spin size="large" />
         </div>
       ) : (
-        <Calendar dateCellRender={dateCellRender} />
+        <Calendar className="full-calendar" dateCellRender={dateCellRender} />
+
       )}
 
       <AppointmentDetails

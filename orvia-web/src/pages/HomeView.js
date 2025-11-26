@@ -1,12 +1,12 @@
 import { FaBell, FaQuestionCircle, FaUserCircle } from "react-icons/fa";
-import { notification, Card, Drawer } from "antd";
+import { notification, Card, Drawer, Avatar } from "antd";
+import { UserOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import FAQDrawer from "../components/FAQs";
 import UserProfile from "../components/UserProfile";
 import NotificationsDrawer from "../components/Notifications";
 import AppointmentDetails from "../components/AppointmentDetails";
 import NoAppointmentsBanner from "../components/NoAppointmentBanner";
-import bannerImage from "../assets/Banner.png";
 import "../styles/HomeStyle.css";
 
 export default function HomeView() {
@@ -19,6 +19,7 @@ export default function HomeView() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  
   const showFAQ = () => setIsFAQOpen(true);
   const closeFAQ = () => setIsFAQOpen(false);
 
@@ -32,6 +33,7 @@ export default function HomeView() {
   const showNotifications = () => setIsNotiOpen(true);
   const closeNotifications = () => setIsNotiOpen(false);
 
+  
   const openModal = (appointment) => {
     setSelectedAppointment(appointment);
     setIsModalOpen(true);
@@ -42,6 +44,7 @@ export default function HomeView() {
     setIsModalOpen(false);
   };
 
+  
   const deleteAppointment = async (id) => {
     try {
       const res = await fetch(`https://api.orviaapp.com/v1/appointments/${id}`, {
@@ -65,9 +68,11 @@ export default function HomeView() {
     }
   };
 
-  // ---- UTC → Local sin perder el día original ----
+  
   const convertUTCToLocalKeepingDay = (utcString) => {
     const d = new Date(utcString);
+
+    
     return new Date(
       d.getUTCFullYear(),
       d.getUTCMonth(),
@@ -83,6 +88,7 @@ export default function HomeView() {
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
 
+
   const fetchAppointments = async () => {
     setLoading(true);
     try {
@@ -96,17 +102,15 @@ export default function HomeView() {
 
       const response = await res.json();
       const list = response.data || [];
-      const now = new Date();
+      const today = new Date();
 
       const todayAppointments = list
         .filter((appt) => {
           if (appt.status !== "Agendada") return false;
 
-          // Convertir sin romper el día
           const start = convertUTCToLocalKeepingDay(appt.start_time);
 
-          // Comparar solo día/mes/año
-          return isSameDay(start, now);
+          return isSameDay(start, today);
         })
         .sort(
           (a, b) =>
@@ -120,7 +124,10 @@ export default function HomeView() {
             id: appt.appointment_id,
             patient: `${appt.first_name} ${appt.last_name}`,
             date: local.toLocaleDateString(),
-            time: local.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            time: local.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
             reason:
               appt.appointment_type ||
               appt.appointment_reason ||
@@ -139,6 +146,7 @@ export default function HomeView() {
     }
   };
 
+
   useEffect(() => {
     const img = localStorage.getItem("selectedProfileImage");
     if (img) {
@@ -146,12 +154,14 @@ export default function HomeView() {
     }
   }, []);
 
+
   useEffect(() => {
     fetchAppointments();
     const interval = setInterval(fetchAppointments, 10000);
     return () => clearInterval(interval);
   }, []);
 
+ 
   return (
     <section className="home">
       <header className="home-header">
@@ -162,18 +172,14 @@ export default function HomeView() {
           <FaBell className="icon" onClick={showNotifications} />
 
           {profileImage ? (
-            <img
-              src={profileImage}
-              alt="Perfil"
-              className="icon profile-image-icon"
-              onClick={showProfile}
-            />
+            <Avatar size={"3vh"} icon={<UserOutlined />} onClick={showProfile}/>
           ) : (
             <FaUserCircle className="icon profile" onClick={showProfile} />
           )}
         </section>
       </header>
 
+      
       <FAQDrawer open={isFAQOpen} onClose={closeFAQ} />
       <NotificationsDrawer open={isNotiOpen} onClose={closeNotifications} />
 
@@ -186,7 +192,8 @@ export default function HomeView() {
       >
         <UserProfile />
       </Drawer>
-        
+
+      
       <h3
         style={{
           display: "flex",
@@ -197,10 +204,13 @@ export default function HomeView() {
       >
         📅 Citas de hoy
       </h3>
-        {appointments.length === 0 && (
-          <NoAppointmentsBanner onRefresh={fetchAppointments} />
-        )}
 
+      
+      {appointments.length === 0 && (
+        <NoAppointmentsBanner onRefresh={fetchAppointments} />
+      )}
+
+      
       <div
         style={{
           display: "grid",
@@ -210,7 +220,7 @@ export default function HomeView() {
           maxHeight: "70%",
         }}
       >
-        {appointments.length > 0 ? (
+        {appointments.length > 0 &&
           appointments.map((item) => (
             <Card
               key={item.id}
@@ -235,20 +245,9 @@ export default function HomeView() {
                 <b>Motivo:</b> {item.reason}
               </p>
             </Card>
-          ))
-        ) : (
-          <p
-            style={{
-              gridColumn: "1 / -1",
-              textAlign: "center",
-              marginTop: "2rem",
-              color: "GrayText",
-              fontSize: "0.9vw",
-            }}
-          >
-          </p>
-        )}
+          ))}
       </div>
+
 
       <AppointmentDetails
         visible={isModalOpen}

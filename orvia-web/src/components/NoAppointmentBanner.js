@@ -35,7 +35,6 @@ export default function NoAppointmentsBanner({ onRefresh }) {
       <h3 style={{ fontSize: "1.1rem", marginBottom: "0.7rem" }}>{mensaje}</h3>
 
 
-      {/* Animación CSS */}
       <style>
         {`
           @keyframes fadeIn {

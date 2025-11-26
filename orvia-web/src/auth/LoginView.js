@@ -196,10 +196,6 @@ export default function LoginView({ switchToRegister }) {
             ¿Olvidaste tu contraseña?
           </p>
 
-          <p style={{display:"flex", justifyContent: "center", color: "#8e8e8eff"}}>
-            Ingresa con:
-          </p>
-
           <Button
             type="default"
             icon={<GoogleOutlined />}

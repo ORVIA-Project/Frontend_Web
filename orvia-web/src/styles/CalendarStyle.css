@@ -7,8 +7,8 @@
 }
 
 .ant-picker-calendar {
-  width: 100% !important;
-  height: auto !important;
+  width: 100% ;
+  height: 50% !important;
 }
 .events {
   margin: 0;
@@ -28,4 +28,9 @@
 }
 .notes-month section {
   font-size: 28px;
+}
+
+/* Asignar un alto completo al calendario */
+.calendar-container .ant-picker-calendar {
+  height: 100px !important; /* o el tamaño que quieras */
 }

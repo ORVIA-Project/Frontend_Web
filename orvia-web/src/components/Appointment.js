@@ -13,7 +13,7 @@ export default function AppointmentModal({ open, setOpen }) {
   const [api, contextHolder] = notification.useNotification();
   const disabledHours = () => {
     const morningDisabled = range(0, 7); 
-    const eveningDisabled = range(19, 24);
+    const eveningDisabled = range(22, 24);
     
     return [...morningDisabled, ...eveningDisabled];
   };
